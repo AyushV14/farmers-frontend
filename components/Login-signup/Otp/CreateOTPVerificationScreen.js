@@ -1,14 +1,50 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export default function CreateOTPVerificationScreen({ navigation }) {
+export default function CreateOTPVerificationScreen({ navigation, route }) {
+  const { backendOtp } = route.params;  // Access the OTP passed from the previous screen
   const [otp, setOtp] = useState('');
 
-  const handleVerify = () => {
-    // Handle OTP verification logic here
-    // If OTP is correct, navigate to ConsumerDashboard
-    navigation.navigate('ConsumerDashboard');
+  const handleVerify = async () => {
+    if (otp === backendOtp) {
+      try {
+        const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/consumer/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name,
+            phone,
+            email,
+            address,
+            password,
+            otp: backendOtp,
+            // If photo needs to be sent, include it
+          }),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          console.log('User registered:', data);
+          navigation.navigate('ConsumerDashboard');
+        } else {
+          console.error('Failed to sign up');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
+    }
+  };
+  
+
+  const handleResendOtp = () => {
+    // Handle OTP resend logic here
+    // You might want to call the backend API to resend the OTP
+    Alert.alert('OTP Resent', 'A new OTP has been sent to your email.');
   };
 
   return (
@@ -38,7 +74,7 @@ export default function CreateOTPVerificationScreen({ navigation }) {
           <Text style={styles.buttonText}>Verify</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.resendButton} onPress={() => { /* Handle resend OTP */ }}>
+        <TouchableOpacity style={styles.resendButton} onPress={handleResendOtp}>
           <Text style={styles.resendText}>Resend Code</Text>
         </TouchableOpacity>
       </View>

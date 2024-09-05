@@ -5,9 +5,11 @@ import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker if using
 
 export default function ConsumerLoginScreen({ navigation }) {
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+
   const [password, setPassword] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -23,9 +25,9 @@ export default function ConsumerLoginScreen({ navigation }) {
   };
 
   const handleSignUp = async () => {
-    if (name && email && password) {
+    if (name && phone && email && address && location && password) {
       try {
-        const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/api/register', {
+        const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/verifyOTP', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -38,7 +40,7 @@ export default function ConsumerLoginScreen({ navigation }) {
         if (response.ok) {
           const data = await response.json();
           console.log('User registered:', data);
-          navigation.navigate('CreateOTPVerificationScreen');
+          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp ,name,phone,email,address,password});
         } else {
           console.error('Failed to register user');
         }
@@ -70,11 +72,28 @@ export default function ConsumerLoginScreen({ navigation }) {
 
         <TextInput
           style={styles.input}
+          placeholder="Phone Number"
+          value={phone}
+          onChangeText={setPhone}
+          keyboardType="phone-pad"
+        />
+
+        <TextInput
+          style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
         />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Address"
+          value={address}
+          onChangeText={setAddress}
+        />
+
+
 
         <TextInput
           style={styles.input}
@@ -84,14 +103,7 @@ export default function ConsumerLoginScreen({ navigation }) {
           secureTextEntry
         />
 
-        <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
-          <Text style={styles.photoButtonText}>Add Profile Photo</Text>
-        </TouchableOpacity>
-
-        {profilePhoto && (
-          <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
-        )}
-
+       
         <TouchableOpacity style={styles.button} onPress={handleSignUp}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </TouchableOpacity>
