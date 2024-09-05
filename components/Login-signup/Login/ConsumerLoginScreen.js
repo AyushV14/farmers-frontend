@@ -22,10 +22,43 @@ export default function ConsumerLoginScreen({ navigation }) {
   // Initialize translation
   const { t } = useTranslation();
 
-  const handleLogin = () => {
-    // Handle consumer login logic here
-    navigation.navigate('ConsumerDashboard');
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/consumer/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.verificationstatus) {
+          // Extract user data
+          const userData = data.value;
+
+          // Navigate to ConsumerDashboard with user data
+          navigation.navigate('ConsumerDashboard', { user: userData });
+        } else {
+          // Handle failed verification
+          alert(data.data || 'Verification failed');
+        }
+      } else {
+        // Handle errors (e.g., invalid credentials)
+        alert(data.data || 'Login failed');
+      }
+    } catch (error) {
+      // Handle network or other errors
+      alert('An error occurred. Please try again.');
+      console.error('Login error:', error);
+    }
   };
+
 
   return (
     <LinearGradient

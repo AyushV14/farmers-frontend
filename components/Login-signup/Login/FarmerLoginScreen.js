@@ -10,7 +10,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
+  Alert
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -18,9 +19,42 @@ export default function FarmerLoginScreen({ navigation }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
-    // Handle farmer login logic here
-    navigation.navigate('FarmerDashboard');
+  const handleLogin = async () => {
+    if (!username || !password) {
+      Alert.alert('Validation Error', 'Please enter both username and password.');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/farmer/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: username, // Assuming username is the email
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.verificationstatus) {
+          // Navigate to FarmerDashboard if verificationstatus is true
+          navigation.navigate('FarmerDashboard');
+        } else {
+          // Show alert if verificationstatus is false
+          Alert.alert('Account Not Verified', 'Your account is not verified. Please check your email for verification instructions.');
+        }
+      } else {
+        // Handle errors returned from the server
+        Alert.alert('Login Failed', data.message || 'Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      Alert.alert('Error', 'An error occurred. Please try again.');
+    }
   };
 
   return (

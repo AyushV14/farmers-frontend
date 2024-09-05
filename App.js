@@ -11,6 +11,7 @@ import FarmerDashboard from './components/Dashboard/FarmerDashboard';
 import BottomNavigator from './components/Dashboard/bottomnav/BottomNavigator';
 import BottomNavFarmer from './components/Dashboard/bottomnav/BottomNavFarmer';
 import CreateOTPVerificationScreen from './components/Login-signup/Otp/CreateOTPVerificationScreen';
+import Satbara from './components/Login-signup/7-12/satbara'
 
 const Stack = createStackNavigator();
 
@@ -55,6 +56,11 @@ export default function App() {
           name="FarmerDashboard"
           options={{ headerShown: false }}
           component={BottomNavFarmer}
+        />
+        <Stack.Screen
+          name="satbara"
+          options={{ headerShown: false }}
+          component={Satbara}
         />
         <Stack.Screen
           name="ConsumerDashboard"

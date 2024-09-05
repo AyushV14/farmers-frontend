@@ -16,12 +16,15 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import categories from '../consts/categories';
 import foods from '../consts/foods';
+import { useRoute } from '@react-navigation/native';
 
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
-export default function ConsumerDashboard({ route }) {
-  const { name, phone, email, address, password } = route.params || {};
+export default function ConsumerDashboard() {
+  // const { name, phone, email, address, password } = route.params || {};
+  const route = useRoute();
+  const { user } = route.params || {};
   const COLORS = {
     white: '#FFF',
     dark: '#000',
@@ -131,7 +134,7 @@ export default function ConsumerDashboard({ route }) {
 
       <View style={style.greetingContainer}>
         <Text style={style.greetingText}>Hello,</Text>
-        <Text style={style.greetingTextBold}>Ayush!</Text>
+        <Text style={style.greetingTextBold}>{user?.name}!</Text>
       </View>
       <View
         style={{

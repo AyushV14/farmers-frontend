@@ -1,22 +1,63 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation } from '@react-navigation/native';
 
 export default function FarmerSignIn() {
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
-  const [pinCode, setPinCode] = useState('');
+  const [pincode, setPinCode] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const navigation = useNavigation();
 
-  const handleSignUp = () => {
-    // Handle farmer sign-up logic here
-    navigation.navigate('FarmerDashboard');
+  const handleSignUp = async () => {
+    // Basic validation
+    if (!name || !location || !pincode || !phone || !email || !password || !confirmPassword) {
+      alert('Please fill out all fields.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match.');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/farmer/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          address: location,
+          pincode,
+          phone,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Handle successful sign-up, e.g., navigate to dashboard
+        navigation.navigate('FarmerDashboard');
+        console.log(data);
+
+      } else {
+        // Handle errors returned from the server
+        alert(data.message || 'Sign-up failed. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error during sign-up:', error);
+      alert('An error occurred. Please try again.');
+    }
   };
+
 
   return (
     <LinearGradient
@@ -46,7 +87,7 @@ export default function FarmerSignIn() {
           <TextInput
             style={styles.input}
             placeholder="Pin Code"
-            value={pinCode}
+            value={pincode}
             onChangeText={setPinCode}
             keyboardType="numeric"
           />
