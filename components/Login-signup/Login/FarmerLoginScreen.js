@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function FarmerLoginScreen({ navigation }) {
@@ -16,30 +28,42 @@ export default function FarmerLoginScreen({ navigation }) {
       colors={['#e0f2f1', '#b9fbc0']} // Light green gradient
       style={styles.background}
     >
-      <View style={styles.container}>
-        <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
-        <Text style={styles.title}>Welcome Back!</Text>
-        <Text style={styles.subtitle}>Access your account to manage your farm and products.</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Log In</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.signUpButton} onPress={() => console.log("Sign Up pressed")}>
-          <Text style={styles.signUpText} onPress={() => navigation.navigate('FarmerSignIn')}>Don't have an account? Sign Up</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.innerContainer}>
+              <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
+              <Text style={styles.title}>Welcome Back!</Text>
+              <Text style={styles.subtitle}>Access your account to manage your farm and products.</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Username"
+                value={username}
+                onChangeText={setUsername}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
+              <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                <Text style={styles.buttonText}>Log In</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.signUpButton} onPress={() => navigation.navigate('FarmerSignIn')}>
+                <Text style={styles.signUpText}>Don't have an account? Sign Up</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 }
@@ -47,10 +71,16 @@ export default function FarmerLoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
+  innerContainer: {
     width: '90%',
     maxWidth: 400,
     backgroundColor: 'rgba(255, 255, 255, 0.9)', // Semi-transparent white overlay

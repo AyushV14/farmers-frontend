@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Alert,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CreateOTPVerificationScreen({ navigation, route }) {
@@ -15,16 +28,11 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            name,
-            phone,
-            email,
-            address,
-            password,
-            otp: backendOtp,
-            // If photo needs to be sent, include it
+            // Assuming these are also available in the current component or passed as route params
+            name, phone, email, address, password, otp: backendOtp,
           }),
         });
-  
+
         if (response.ok) {
           const data = await response.json();
           console.log('User registered:', data);
@@ -39,7 +47,6 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
       Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
     }
   };
-  
 
   const handleResendOtp = () => {
     // Handle OTP resend logic here
@@ -52,32 +59,39 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
       colors={['#e0f2f1', '#b9fbc0']} // Light green gradient
       style={styles.background}
     >
-      <View style={styles.container}>
-        <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
-
-        <Text style={styles.title}>OTP Verification</Text>
-
-        <Text style={styles.infoText}>
-          We have sent a verification code to your email. Please enter it below to verify your account.
-        </Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Enter OTP"
-          value={otp}
-          onChangeText={setOtp}
-          keyboardType="numeric"
-          maxLength={6}
-        />
-
-        <TouchableOpacity style={styles.button} onPress={handleVerify}>
-          <Text style={styles.buttonText}>Verify</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.resendButton} onPress={handleResendOtp}>
-          <Text style={styles.resendText}>Resend Code</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.innerContainer}>
+              <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
+              <Text style={styles.title}>OTP Verification</Text>
+              <Text style={styles.infoText}>
+                We have sent a verification code to your email. Please enter it below to verify your account.
+              </Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter OTP"
+                value={otp}
+                onChangeText={setOtp}
+                keyboardType="numeric"
+                maxLength={6}
+              />
+              <TouchableOpacity style={styles.button} onPress={handleVerify}>
+                <Text style={styles.buttonText}>Verify</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.resendButton} onPress={handleResendOtp}>
+                <Text style={styles.resendText}>Resend Code</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 }
@@ -85,18 +99,22 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
+  innerContainer: {
     width: '90%',
     maxWidth: 400,
     padding: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent white background
     borderRadius: 10,
     alignItems: 'center',
-    minHeight: 400,
-    maxHeight: '80%',
   },
   logo: {
     width: 100,
@@ -132,8 +150,8 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 20,
     width: '100%',
+    marginBottom: 15,
   },
   buttonText: {
     color: '#fff',
@@ -143,7 +161,6 @@ const styles = StyleSheet.create({
   resendButton: {
     padding: 15,
     alignItems: 'center',
-    marginTop: 20,
   },
   resendText: {
     color: '#388e3c',

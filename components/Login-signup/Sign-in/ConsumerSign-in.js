@@ -1,15 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient'; // Import LinearGradient for gradient background
-import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker if using Expo
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function ConsumerLoginScreen({ navigation }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
-
   const [password, setPassword] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState(null);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -25,7 +37,7 @@ export default function ConsumerLoginScreen({ navigation }) {
   };
 
   const handleSignUp = async () => {
-    if (name && phone && email && address && location && password) {
+    if (name && phone && email && address && password) {
       try {
         const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/verifyOTP', {
           method: 'POST',
@@ -40,7 +52,7 @@ export default function ConsumerLoginScreen({ navigation }) {
         if (response.ok) {
           const data = await response.json();
           console.log('User registered:', data);
-          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp ,name,phone,email,address,password});
+          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp, name, phone, email, address, password });
         } else {
           console.error('Failed to register user');
         }
@@ -51,67 +63,83 @@ export default function ConsumerLoginScreen({ navigation }) {
       alert('Please fill all fields');
     }
   };
-  
 
   return (
     <LinearGradient
       colors={['#e0f2f1', '#b9fbc0']} // Light green gradient
       style={styles.background}
     >
-      <View style={styles.container}>
-        <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.innerContainer}>
+              <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
 
-        <Text style={styles.title}>Join Our Community</Text>
+              <Text style={styles.title}>Join Our Community</Text>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Your Name"
-          value={name}
-          onChangeText={setName}
-        />
+              {profilePhoto && (
+                <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
+              )}
 
-        <TextInput
-          style={styles.input}
-          placeholder="Phone Number"
-          value={phone}
-          onChangeText={setPhone}
-          keyboardType="phone-pad"
-        />
+              <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
+                <Text style={styles.photoButtonText}>Pick a Profile Photo</Text>
+              </TouchableOpacity>
 
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-        />
+              <TextInput
+                style={styles.input}
+                placeholder="Your Name"
+                value={name}
+                onChangeText={setName}
+              />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Address"
-          value={address}
-          onChangeText={setAddress}
-        />
+              <TextInput
+                style={styles.input}
+                placeholder="Phone Number"
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+              />
 
+              <TextInput
+                style={styles.input}
+                placeholder="Email"
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+              />
 
+              <TextInput
+                style={styles.input}
+                placeholder="Address"
+                value={address}
+                onChangeText={setAddress}
+              />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+              />
 
-       
-        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-          <Text style={styles.buttonText}>Sign Up</Text>
-        </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+                <Text style={styles.buttonText}>Sign Up</Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('ConsumerLogin')}>
-          <Text style={styles.signInText}>Already have an account? Login</Text>
-        </TouchableOpacity>
-      </View>
+              <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('ConsumerLogin')}>
+                <Text style={styles.signInText}>Already have an account? Login</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 }
@@ -119,18 +147,23 @@ export default function ConsumerLoginScreen({ navigation }) {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+  },
+  container: {
+    flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
+  innerContainer: {
     width: '90%',
     maxWidth: 400,
     padding: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Slightly transparent white background
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     borderRadius: 10,
     alignItems: 'center',
-    minHeight: 500, // Minimum height to ensure content is well-contained
-    maxHeight: '80%', // Maximum height to avoid taking full screen
+    minHeight: 500,
   },
   logo: {
     width: 100,
