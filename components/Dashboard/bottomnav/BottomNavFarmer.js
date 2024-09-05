@@ -1,26 +1,20 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { View, Text } from 'react-native';
-import FarmerDashboard from '../FarmerDashboard'; // Import your actual ConsumerDashboard screen
-import CartScreen from '../Cart/CartScreen'; // Import your actual CartScreen.js
+import { View } from 'react-native';
+import FarmerDashboard from '../FarmerDashboard';
+import BiddingScreen from '../biddingsystem/BiddingScreen';
+import AddProductScreen from '../FarmerAddProduct/AddProductScreen'; // Assuming you have an Add Product screen
+import OrderReceivedScreen from '../FarmerOrders/OrderReceivedScreen'; // Assuming you have an Order Received screen
 
-// Define COLORS directly with green shades
 const COLORS = {
   white: '#FFF',
   dark: '#000',
-  primary: '#4CAF50', // Changed to green shade
-  secondary: '#C8E6C9', // Changed to light green shade
+  primary: '#4CAF50',
+  secondary: '#C8E6C9',
   light: '#E5E5E5',
   grey: '#908e8c',
 };
-
-// Placeholder Components for other screens
-const PlaceholderScreen = ({ title }) => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>{title}</Text>
-  </View>
-);
 
 const Tab = createBottomTabNavigator();
 
@@ -28,63 +22,34 @@ const BottomNavFarmer = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        headerShown: false, // Hide the header for all screens
-        tabBarActiveTintColor: COLORS.primary, // Active tint color
-        tabBarShowLabel: false, // Hide labels
+        headerShown: false,
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarShowLabel: false,
         tabBarStyle: {
-          display: 'flex', // Ensure the tab bar is visible
-          borderTopWidth: 0, 
+          borderTopWidth: 0,
           elevation: 0,
           paddingBottom: 10,
-          marginBottom: 0,
         },
         tabBarIcon: ({ color, size }) => {
-          // Add logic to render icons based on route
           switch (route.name) {
             case 'Home':
-              return <Icon name="home-filled" color={color} size={size}  style={{fontSize:'30px'}}/>;
-            case 'LocalMall':
-              return <Icon name="local-mall" color={color} size={size}  style={{fontSize:'30px'}}/>;
-            case 'Search':
-              return (
-                <View
-                  style={{
-                    height: 60,
-                    width: 60,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: COLORS.white,
-                    borderColor: COLORS.primary,
-                    borderWidth: 2,
-                    borderRadius: 30,
-                    top: -25,
-                    elevation: 5,
-                    
-                  }}
-                >
-                  <Icon name="add" color={COLORS.primary} size={size} style={{fontSize:'40px'}} />
-                </View>
-              );
-            case 'Favorite':
-              return <Icon name="add-chart" color={color} size={size} style={{fontSize:'30px'}} />;
-            case 'Cart':
-              return <Icon name="shopping-cart" color={color} size={size}  style={{fontSize:'30px'}}/>;
+              return <Icon name="home-filled" color={color} size={size} />;
+            case 'BiddingSystem':
+              return <Icon name="gavel" color={color} size={size} />;
+            case 'AddProduct':
+              return <Icon name="add-box" color={color} size={size} />;
+            case 'OrderReceived':
+              return <Icon name="receipt" color={color} size={size} />;
             default:
               return null;
           }
         },
       })}
     >
-      {/* Navigate to ConsumerDashboard when Home is clicked */}
       <Tab.Screen name="Home" component={FarmerDashboard} />
-
-      {/* Placeholder Screens */}
-      <Tab.Screen name="LocalMall" children={() => <PlaceholderScreen title="Local Mall Screen" />} />
-      <Tab.Screen name="Search" children={() => <PlaceholderScreen title="Search Screen" />} />
-      <Tab.Screen name="Favorite" children={() => <PlaceholderScreen title="Favorite Screen" />} />
-
-      {/* Navigate to CartScreen.js when Cart is clicked */}
-      <Tab.Screen name="Cart" component={CartScreen} />
+      <Tab.Screen name="BiddingSystem" component={BiddingScreen} />
+      <Tab.Screen name="AddProduct" component={AddProductScreen} />
+      <Tab.Screen name="OrderReceived" component={OrderReceivedScreen} />
     </Tab.Navigator>
   );
 };
