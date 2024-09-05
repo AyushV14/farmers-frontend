@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -22,43 +22,6 @@ const cardWidth = width / 2 - 20;
 
 export default function ConsumerDashboard({ route }) {
   const { name, phone, email, address, password } = route.params || {};
-  // console.log(route.params);
-
-
-  // const { my_data } = route.params || {}; // Default to empty object if route.params is undefined
-  const [my_data, setmy_data] = useState({})
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/consumer/signup', {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           name,
-  //           phone,
-  //           email,
-  //           address,
-  //           password,
-  //         }),
-  //       });
-
-  //       if (response.ok) {
-  //         const data = await response.json();
-  //         console.log('User registered:', data.data);
-  //         setmy_data(data); // Pass userData to ConsumerDashboard
-  //       } else {
-  //         console.error('Failed to sign up');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error:', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   const COLORS = {
     white: '#FFF',
     dark: '#000',
@@ -68,33 +31,24 @@ export default function ConsumerDashboard({ route }) {
     grey: '#908e8c',
   };
 
-  // Ensure userData is not undefined
-
-
-
-  // State for categories and selected category
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
+  const [data, setData] = useState(foods.slice(0, 10));
+  const [page, setPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
 
-  // State for foods (pagination)
-  const [data, setData] = useState(foods.slice(0, 10)); // Initially load only 10 items
-  const [page, setPage] = useState(1); // Current page number
-  const [loadingMore, setLoadingMore] = useState(false); // Loading state
-
-  // Simulate loading more data
   const loadMoreData = () => {
-    if (loadingMore) return; // Prevent multiple calls
-
+    if (loadingMore) return;
     setLoadingMore(true);
 
     setTimeout(() => {
       const newPage = page + 1;
-      const moreData = foods.slice(page * 10, (page + 1) * 10); // Fetch next 10 items
+      const moreData = foods.slice(page * 10, (page + 1) * 10);
       if (moreData.length > 0) {
-        setData([...data, ...moreData]); // Append new data to current list
-        setPage(newPage); // Update page number
+        setData([...data, ...moreData]);
+        setPage(newPage);
       }
-      setLoadingMore(false); // Stop loading
-    }, 1500); // Simulate network delay
+      setLoadingMore(false);
+    }, 1500);
   };
 
   const ListCategories = () => (
@@ -142,22 +96,15 @@ export default function ConsumerDashboard({ route }) {
 
   const Card = ({ food }) => (
     <TouchableOpacity style={style.card}>
-      <View style={{ alignItems: 'center', top: -40 }}>
-        <Image source={food.image} style={{ height: 120, width: 120 }} />
+      <View style={style.cardImageContainer}>
+        <Image source={food.image} style={style.cardImage} />
       </View>
-      <View style={{ marginHorizontal: 20 }}>
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
-        <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>{food.ingredients}</Text>
+      <View style={style.cardTextContainer}>
+        <Text style={style.foodName}>{food.name}</Text>
+        <Text style={style.foodIngredients}>{food.ingredients}</Text>
       </View>
-      <View
-        style={{
-          marginTop: 10,
-          marginHorizontal: 20,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>₹{food.price}/kg</Text>
+      <View style={style.cardFooter}>
+        <Text style={style.foodPrice}>₹{food.price}/kg</Text>
         <View style={style.addToCartBtn}>
           <Icon name="add" size={20} color={COLORS.white} />
         </View>
@@ -325,6 +272,39 @@ const style = StyleSheet.create({
     marginBottom: 20,
     elevation: 2,
     marginHorizontal: 10,
+    overflow: 'hidden',
+  },
+  cardImageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10,
+  },
+  cardImage: {
+    height: 120,
+    width: 120,
+    resizeMode: 'contain',
+  },
+  cardTextContainer: {
+    marginHorizontal: 20,
+  },
+  foodName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  foodIngredients: {
+    fontSize: 14,
+    color: '#908e8c',
+    marginTop: 2,
+  },
+  cardFooter: {
+    marginTop: 10,
+    marginHorizontal: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  foodPrice: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   addToCartBtn: {
     height: 40,
