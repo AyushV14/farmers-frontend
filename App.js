@@ -6,6 +6,7 @@ import RoleSelection from './components/Intro/RoleSelection';
 import ConsumerLoginScreen from './components/Login-signup/Login/ConsumerLoginScreen';
 import FarmerLoginScreen from './components/Login-signup/Login/FarmerLoginScreen';
 import ConsumerSignIn from './components/Login-signup/Sign-in/ConsumerSign-in';
+import FarmerSignIn from './components/Login-signup/Sign-in/FarmerSign-in';
 import FarmerDashboard from './components/Dashboard/FarmerDashboard';
 import BottomNavigator from './components/Dashboard/bottomnav/BottomNavigator'; // Import BottomNavigator
 import BottomNavFarmer from './components/Dashboard/bottomnav/BottomNavFarmer'; // Import BottomNavigator
@@ -41,6 +42,11 @@ export default function App() {
         <Stack.Screen
           name="ConsumerSignIn"
           component={ConsumerSignIn}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="FarmerSignIn"
+          component={FarmerSignIn}
           options={{ headerShown: false }}
         />
         <Stack.Screen

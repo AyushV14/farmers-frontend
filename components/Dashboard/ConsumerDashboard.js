@@ -115,51 +115,60 @@ export default function ConsumerDashboard() {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: COLORS.white, paddingBottom: 70 }}>
       <View style={style.header}>
-        <View>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 28}}>Hello,</Text>
-            <Text style={{fontSize: 28, fontWeight: 'bold', marginLeft: 10}}>
-              Xyz
-            </Text>
+        {/* Top Left Section */}
+        <View style={style.topLeft}>
+          <View style={style.iconContainer}>
+            <Icon name="home" size={24} color={COLORS.white} />
           </View>
-          <Text style={{marginTop: 5, fontSize: 22, color: COLORS.grey}}>
-            What do you want today
-          </Text>
+          <View style={{marginLeft: 10}}>
+            <Text style={{fontSize: 16, color: COLORS.dark}}>Your Location</Text>
+            <Text style={{fontSize: 14, color: COLORS.grey}}>City, Country</Text>
+          </View>
         </View>
-        <Image
-          source={require('../../assets/images/person.png')}
-          style={{height: 50, width: 50, borderRadius: 25}}
-        />
-      </View>
-      <View
-        style={{
-          marginTop: 40,
-          flexDirection: 'row',
-          paddingHorizontal: 20,
-        }}>
-        <View style={style.inputContainer}>
-          <Icon name="search" size={28} />
-          <TextInput
-            style={{flex: 1, fontSize: 18}}
-            placeholder="Search for food"
-          />
-        </View>
-        <View style={style.sortBtn}>
-          <Icon name="credit-card" size={28} style={{color: COLORS.white}} />
+        {/* Top Right Section */}
+        <View style={style.iconContainer}>
+          <Icon name="notifications" size={24} color={COLORS.white} />
         </View>
       </View>
-      <View>
-        <ListCategories />
-      </View>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        numColumns={2}
-        data={foods}
-        renderItem={({item}) => <Card food={item} />}
+      
+      {/* Main Content Container */}
+      <View style={style.mainContainer}>
+  <View style={style.greetingContainer}>
+    <Text style={style.greetingText}>Hello,</Text>
+    <Text style={style.greetingTextBold}>Xyz</Text>
+  </View>
+  <View
+    style={{
+      marginTop: 20, // Adjusted margin to give some space between the greeting and search bar
+      flexDirection: 'row',
+      paddingHorizontal: 20,
+    }}>
+    <View style={style.inputContainer}>
+      <Icon name="search" size={28} />
+      <TextInput
+        style={{flex: 1, fontSize: 18}}
+        placeholder="Search for food"
       />
-      <View style={style.bottomsec}>
-        {/* <BottomNavigator style={style.bottomnav} /> */}
+    </View>
+    <View style={style.sortBtn}>
+      <Icon name="credit-card" size={28} style={{color: COLORS.white}} />
+    </View>
+  </View>
       </View>
+
+        <View>
+          <ListCategories />
+        </View>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          data={foods}
+          renderItem={({item}) => <Card food={item} />}
+        />
+        <View style={style.bottomsec}>
+          {/* <BottomNavigator style={style.bottomnav} /> */}
+        </View>
+      
     </SafeAreaView>
   );
 }
@@ -169,7 +178,43 @@ const style = StyleSheet.create({
     marginTop: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 20,
+  },
+  topLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  iconContainer: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    backgroundColor: '#4CAF50', // Changed to green shade
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mainContainer: {
+    padding: 20,
+    backgroundColor: '#F5F5F5', // Adjust background color if needed
+    borderRadius: 15, // Add border radius
+    marginHorizontal: 10, // Add margin to give some space from the sides
+    marginVertical: 20, // Add margin to give some space from the sides
+  },
+  greetingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',  // Center the greeting horizontally
+    alignItems: 'center',      // Center the greeting vertically
+    marginBottom: 10,          // Add some space between the greeting and the search bar
+  },
+  greetingText: {
+    fontSize: 28,
+    color: '#000',
+  },
+  greetingTextBold: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginLeft: 10,
+    color: '#000',
   },
   inputContainer: {
     flex: 1,
@@ -190,7 +235,7 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   categoriesListContainer: {
-    paddingVertical: 30,
+    paddingVertical: 5,
     alignItems: 'center',
     paddingHorizontal: 20,
   },
