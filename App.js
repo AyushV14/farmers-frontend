@@ -8,14 +8,15 @@ import FarmerLoginScreen from './components/Login-signup/Login/FarmerLoginScreen
 import ConsumerSignIn from './components/Login-signup/Sign-in/ConsumerSign-in';
 import FarmerSignIn from './components/Login-signup/Sign-in/FarmerSign-in';
 import FarmerDashboard from './components/Dashboard/FarmerDashboard';
-import BottomNavigator from './components/Dashboard/bottomnav/BottomNavigator'; // Import BottomNavigator
-import BottomNavFarmer from './components/Dashboard/bottomnav/BottomNavFarmer'; // Import BottomNavigator
+import BottomNavigator from './components/Dashboard/bottomnav/BottomNavigator';
+import BottomNavFarmer from './components/Dashboard/bottomnav/BottomNavFarmer';
 import CreateOTPVerificationScreen from './components/Login-signup/Otp/CreateOTPVerificationScreen';
 
 const Stack = createStackNavigator();
 
 export default function App() {
-  // Shared state for products
+  // State to hold user data
+  const [userData, setUserData] = useState(null);
 
   return (
     <NavigationContainer>
@@ -55,18 +56,20 @@ export default function App() {
           options={{ headerShown: false }}
           component={BottomNavFarmer}
         />
-          
         <Stack.Screen
           name="ConsumerDashboard"
           options={{ headerShown: false }}
-          component={BottomNavigator}
-        />
+        >
+          {props => <BottomNavigator {...props} userData={userData} />}
+        </Stack.Screen>
         <Stack.Screen
           name="CreateOTPVerificationScreen"
           options={{ headerShown: false }}
-          component={CreateOTPVerificationScreen}
-        />
-            
+        >
+          {props => (
+            <CreateOTPVerificationScreen {...props} setUserData={setUserData} />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );

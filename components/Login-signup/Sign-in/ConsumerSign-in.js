@@ -25,7 +25,7 @@ export default function ConsumerLoginScreen({ navigation }) {
   };
 
   const handleSignUp = async () => {
-    if (name && phone && email && address && location && password) {
+    if (name && phone && email && address && password) {
       try {
         const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/verifyOTP', {
           method: 'POST',
@@ -39,10 +39,10 @@ export default function ConsumerLoginScreen({ navigation }) {
   
         if (response.ok) {
           const data = await response.json();
-          console.log('User registered:', data);
-          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp ,name,phone,email,address,password});
+          console.log('OTP sent to email:', data);
+          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp, name, phone, email, address, password });
         } else {
-          console.error('Failed to register user');
+          console.error('Failed to send OTP');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -51,6 +51,7 @@ export default function ConsumerLoginScreen({ navigation }) {
       alert('Please fill all fields');
     }
   };
+  
   
 
   return (

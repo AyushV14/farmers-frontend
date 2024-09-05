@@ -3,11 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } fro
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CreateOTPVerificationScreen({ navigation, route }) {
-  const { backendOtp } = route.params;  // Access the OTP passed from the previous screen
+  const { backendOtp, name, phone, email, address, password } = route.params;
   const [otp, setOtp] = useState('');
 
   const handleVerify = async () => {
     if (otp === backendOtp) {
+      // navigation.navigate('ConsumerDashboard', { name, phone, email, address, password });
       try {
         const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/consumer/signup', {
           method: 'POST',
@@ -20,15 +21,13 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
             email,
             address,
             password,
-            otp: backendOtp,
-            // If photo needs to be sent, include it
           }),
         });
-  
+
         if (response.ok) {
           const data = await response.json();
-          console.log('User registered:', data);
-          navigation.navigate('ConsumerDashboard');
+          console.log('User registered:', data.data);
+          navigation.navigate('ConsumerDashboard', { data }); // Pass userData to ConsumerDashboard
         } else {
           console.error('Failed to sign up');
         }
@@ -39,7 +38,9 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
       Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
     }
   };
-  
+
+
+
 
   const handleResendOtp = () => {
     // Handle OTP resend logic here
@@ -66,7 +67,7 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
           placeholder="Enter OTP"
           value={otp}
           onChangeText={setOtp}
-          keyboardType="numeric"
+
           maxLength={6}
         />
 
