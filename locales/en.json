@@ -1,0 +1,20 @@
+{
+  "logo": "FarmConnect",
+  "description": "Connecting farmers directly with consumers and retailers, ensuring better prices and fair trade.",
+  "start": "Get Started",
+  "lang": "Choose Language",
+  "roleSelection": {
+      "title": "Choose Your Role",
+      "description": "Select an option below to get started with features tailored just for you.",
+      "farmer": "Farmer",
+      "consumer": "Consumer"
+  },
+  "consumerLogin": {
+      "title": "Welcome Back!",
+      "subtitle": "Access your account to explore and manage your preferences.",
+      "email": "Email",
+      "password": "Password",
+      "login": "Log In",
+      "signUpPrompt": "Don't have an account? Sign Up"
+  }
+}
