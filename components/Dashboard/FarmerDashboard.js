@@ -7,8 +7,8 @@ export default function FarmerDashboard() {
   const COLORS = {
     white: '#FFF',
     dark: '#000',
-    primary: '#4CAF50', // Changed to a shade of green
-    secondary: '#C8E6C9', // Changed to a light green shade
+    primary: '#4CAF50', 
+    secondary: '#C8E6C9', 
     light: '#E5E5E5',
     grey: '#908e8c',
   };
