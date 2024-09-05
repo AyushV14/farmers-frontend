@@ -22,7 +22,7 @@ const cardWidth = width / 2 - 20;
 
 export default function ConsumerDashboard({ route }) {
   const { name, phone, email, address, password } = route.params || {};
-  console.log(route.params);
+  // console.log(route.params);
 
 
   // const { my_data } = route.params || {}; // Default to empty object if route.params is undefined

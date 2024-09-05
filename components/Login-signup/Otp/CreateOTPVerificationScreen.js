@@ -34,7 +34,6 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
             email,
             address,
             password,
-            otp: backendOtp,
             // If photo needs to be sent, include it
           }),
         });
@@ -80,7 +79,6 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
           placeholder="Enter OTP"
           value={otp}
           onChangeText={setOtp}
-          keyboardType="numeric"
           maxLength={6}
         />
 

@@ -84,13 +84,6 @@ export default function ConsumerLoginScreen({ navigation }) {
 
               <Text style={styles.title}>Join Our Community</Text>
 
-              {profilePhoto && (
-                <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
-              )}
-
-              <TouchableOpacity style={styles.photoButton} onPress={pickImage}>
-                <Text style={styles.photoButtonText}>Pick a Profile Photo</Text>
-              </TouchableOpacity>
 
               <TextInput
                 style={styles.input}
