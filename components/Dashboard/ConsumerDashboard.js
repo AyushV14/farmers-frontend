@@ -36,45 +36,49 @@ export default function ConsumerDashboard() {
 
   const ListCategories = () => {
     return (
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={style.categoriesListContainer}>
-        {categories.map((category, index) => (
-          <TouchableOpacity
-            key={index}
-            activeOpacity={0.8}
-            onPress={() => setSelectedCategoryIndex(index)}>
-            <View
-              style={{
-                backgroundColor:
-                  selectedCategoryIndex == index
-                    ? COLORS.primary
-                    : COLORS.secondary,
-                ...style.categoryBtn,
-              }}>
-              <View style={style.categoryBtnImgCon}>
-                <Image
-                  source={category.image}
-                  style={{height: 35, width: 35, resizeMode: 'cover'}}
-                />
+      <View style={style.categoriesContainer}>
+        <Text style={style.label}>Our features</Text>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={style.categoriesListContainer}
+        >
+          {categories.map((category, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.8}
+              onPress={() => setSelectedCategoryIndex(index)}
+              style={style.categoryBtnWrapper}
+            >
+              <View
+                style={[
+                  style.categoryBtn,
+                  {
+                    backgroundColor: selectedCategoryIndex === index ? COLORS.primary : COLORS.white,
+                  },
+                ]}
+              >
+                <View style={style.categoryBtnImgCon}>
+                  <Image
+                    source={category.image}
+                    style={style.categoryImage}
+                  />
+                </View>
+                <Text
+                  style={[
+                    style.categoryName,
+                    {
+                      color: selectedCategoryIndex === index ? COLORS.white : COLORS.dark,
+                    },
+                  ]}
+                >
+                  {category.name}
+                </Text>
               </View>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                  marginLeft: 10,
-                  color:
-                    selectedCategoryIndex == index
-                      ? COLORS.white
-                      : COLORS.primary,
-                }}>
-                {category.name}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </View>
     );
   };
 
@@ -234,27 +238,55 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  categoriesListContainer: {
-    paddingVertical: 5,
-    alignItems: 'center',
+  categoriesContainer: {
+    paddingVertical: 10,
     paddingHorizontal: 20,
+    // backgroundColor:'#000',
+  },
+  label: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 10, // Space between label and category list
+  },
+  categoriesListContainer: {
+    alignItems: 'center',
+    
+  },
+  categoryBtnWrapper: {
+    marginRight: 15,
   },
   categoryBtn: {
-    height: 45,
-    width: 120,
-    marginRight: 7,
-    borderRadius: 30,
+    width: 90, // Adjust as needed, should be equal to height for circular appearance
+    height: 90, // Ensure equal height
+    borderRadius: 60, // Half of width/height to make it circular
     alignItems: 'center',
-    paddingHorizontal: 5,
-    flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: 'transparent', // No background color, or set as needed
+    flexDirection: 'column',
+    padding: 10,
+    
   },
   categoryBtnImgCon: {
-    height: 35,
-    width: 35,
-    backgroundColor: '#FFF',
-    borderRadius: 30,
-    justifyContent: 'center',
+    width: 40, // Smaller circle for image container
+    height: 40,
+    borderRadius: 30, // Half of width/height to make it circular
+    overflow: 'hidden',
     alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 5,
+  },
+  categoryImage: {
+    width: 40, // Same as container width
+    height: 40, // Same as container height
+    borderRadius: 30, // Same as container radius
+    
+  },
+  categoryName: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    textAlign: 'center', // Center the text
+  
   },
   card: {
     height: 220,

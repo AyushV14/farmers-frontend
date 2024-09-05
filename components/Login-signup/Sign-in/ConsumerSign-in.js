@@ -9,7 +9,6 @@ export default function ConsumerLoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
   const [profilePhoto, setProfilePhoto] = useState(null);
 
-  // Function to handle profile photo selection
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -23,10 +22,34 @@ export default function ConsumerLoginScreen({ navigation }) {
     }
   };
 
-  const handleSignUp = () => {
-    // Handle consumer sign-up logic here
-    navigation.navigate('ConsumerDashboard');
+  const handleSignUp = async () => {
+    if (name && email && password) {
+      try {
+        const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+          }),
+        });
+  
+        if (response.ok) {
+          const data = await response.json();
+          console.log('User registered:', data);
+          navigation.navigate('CreateOTPVerificationScreen');
+        } else {
+          console.error('Failed to register user');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    } else {
+      alert('Please fill all fields');
+    }
   };
+  
 
   return (
     <LinearGradient

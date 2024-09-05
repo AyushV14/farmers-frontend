@@ -10,6 +10,7 @@ import FarmerSignIn from './components/Login-signup/Sign-in/FarmerSign-in';
 import FarmerDashboard from './components/Dashboard/FarmerDashboard';
 import BottomNavigator from './components/Dashboard/bottomnav/BottomNavigator'; // Import BottomNavigator
 import BottomNavFarmer from './components/Dashboard/bottomnav/BottomNavFarmer'; // Import BottomNavigator
+import CreateOTPVerificationScreen from './components/Login-signup/Otp/CreateOTPVerificationScreen';
 
 const Stack = createStackNavigator();
 
@@ -59,6 +60,11 @@ export default function App() {
           name="ConsumerDashboard"
           options={{ headerShown: false }}
           component={BottomNavigator}
+        />
+        <Stack.Screen
+          name="CreateOTPVerificationScreen"
+          options={{ headerShown: false }}
+          component={CreateOTPVerificationScreen}
         />
             
       </Stack.Navigator>
