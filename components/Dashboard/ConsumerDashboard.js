@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import {
   FlatList,
-  TouchableHighlight,
   TouchableOpacity,
 } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -21,7 +20,45 @@ import foods from '../consts/foods';
 const { width } = Dimensions.get('screen');
 const cardWidth = width / 2 - 20;
 
-export default function ConsumerDashboard() {
+export default function ConsumerDashboard({ route }) {
+  const { name, phone, email, address, password } = route.params || {};
+  console.log(route.params);
+
+
+  // const { my_data } = route.params || {}; // Default to empty object if route.params is undefined
+  const [my_data, setmy_data] = useState({})
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/consumer/signup', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({
+  //           name,
+  //           phone,
+  //           email,
+  //           address,
+  //           password,
+  //         }),
+  //       });
+
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log('User registered:', data.data);
+  //         setmy_data(data); // Pass userData to ConsumerDashboard
+  //       } else {
+  //         console.error('Failed to sign up');
+  //       }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
   const COLORS = {
     white: '#FFF',
     dark: '#000',
@@ -30,6 +67,10 @@ export default function ConsumerDashboard() {
     light: '#E5E5E5',
     grey: '#908e8c',
   };
+
+  // Ensure userData is not undefined
+
+
 
   // State for categories and selected category
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -56,84 +97,77 @@ export default function ConsumerDashboard() {
     }, 1500); // Simulate network delay
   };
 
-  const ListCategories = () => {
-    return (
-      <View style={style.categoriesContainer}>
-        <Text style={style.label}>Our Features</Text>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={style.categoriesListContainer}
-          data={categories}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => setSelectedCategoryIndex(index)}
-              style={style.categoryBtnWrapper}
+  const ListCategories = () => (
+    <View style={style.categoriesContainer}>
+      <Text style={style.label}>Our Features</Text>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={style.categoriesListContainer}
+        data={categories}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => setSelectedCategoryIndex(index)}
+            style={style.categoryBtnWrapper}
+          >
+            <View
+              style={[
+                style.categoryBtn,
+                {
+                  backgroundColor: selectedCategoryIndex === index ? COLORS.primary : COLORS.white,
+                },
+              ]}
             >
-              <View
+              <View style={style.categoryBtnImgCon}>
+                <Image source={item.image} style={style.categoryImage} />
+              </View>
+              <Text
                 style={[
-                  style.categoryBtn,
+                  style.categoryName,
                   {
-                    backgroundColor: selectedCategoryIndex === index ? COLORS.primary : COLORS.white,
+                    color: selectedCategoryIndex === index ? COLORS.white : COLORS.dark,
                   },
                 ]}
               >
-                <View style={style.categoryBtnImgCon}>
-                  <Image source={item.image} style={style.categoryImage} />
-                </View>
-                <Text
-                  style={[
-                    style.categoryName,
-                    {
-                      color: selectedCategoryIndex === index ? COLORS.white : COLORS.dark,
-                    },
-                  ]}
-                >
-                  {item.name}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    );
-  };
-
-  const Card = ({ food }) => {
-    return (
-      <TouchableHighlight underlayColor={COLORS.white} activeOpacity={0.9}>
-        <View style={style.card}>
-          <View style={{ alignItems: 'center', top: -40 }}>
-            <Image source={food.image} style={{ height: 120, width: 120 }} />
-          </View>
-          <View style={{ marginHorizontal: 20 }}>
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
-            <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>{food.ingredients}</Text>
-          </View>
-          <View
-            style={{
-              marginTop: 10,
-              marginHorizontal: 20,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: 'bold' }}>₹{food.price}/kg</Text>
-            <View style={style.addToCartBtn}>
-              <Icon name="add" size={20} color={COLORS.white} />
+                {item.name}
+              </Text>
             </View>
-          </View>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
+
+  const Card = ({ food }) => (
+    <TouchableOpacity style={style.card}>
+      <View style={{ alignItems: 'center', top: -40 }}>
+        <Image source={food.image} style={{ height: 120, width: 120 }} />
+      </View>
+      <View style={{ marginHorizontal: 20 }}>
+        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>{food.name}</Text>
+        <Text style={{ fontSize: 14, color: COLORS.grey, marginTop: 2 }}>{food.ingredients}</Text>
+      </View>
+      <View
+        style={{
+          marginTop: 10,
+          marginHorizontal: 20,
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Text style={{ fontSize: 18, fontWeight: 'bold' }}>₹{food.price}/kg</Text>
+        <View style={style.addToCartBtn}>
+          <Icon name="add" size={20} color={COLORS.white} />
         </View>
-      </TouchableHighlight>
-    );
-  };
+      </View>
+    </TouchableOpacity>
+  );
 
   const renderHeader = () => (
     <View style={style.mainContainer}>
       <View style={style.header}>
-        {/* Top Left Section */}
         <View style={style.topLeft}>
           <View style={style.iconContainer}>
             <Icon name="home" size={24} color={COLORS.white} />
@@ -143,16 +177,14 @@ export default function ConsumerDashboard() {
             <Text style={{ fontSize: 14, color: COLORS.grey }}>City, Country</Text>
           </View>
         </View>
-        {/* Top Right Section */}
         <View style={style.iconContainer}>
           <Icon name="notifications" size={24} color={COLORS.white} />
         </View>
       </View>
 
-      {/* Greeting Section */}
       <View style={style.greetingContainer}>
         <Text style={style.greetingText}>Hello,</Text>
-        <Text style={style.greetingTextBold}>Xyz</Text>
+        <Text style={style.greetingTextBold}>Ayush!</Text>
       </View>
       <View
         style={{
@@ -170,7 +202,6 @@ export default function ConsumerDashboard() {
         </View>
       </View>
 
-      {/* Features Section */}
       <ListCategories />
     </View>
   );
@@ -184,9 +215,9 @@ export default function ConsumerDashboard() {
         data={data}
         renderItem={({ item }) => <Card food={item} />}
         keyExtractor={(item) => item.id.toString()}
-        onEndReached={loadMoreData} // Trigger loadMoreData when reaching the end
-        onEndReachedThreshold={0.5} // Trigger when 50% away from end
-        ListFooterComponent={loadingMore && <ActivityIndicator size="large" color={COLORS.primary} />} // Show loading indicator
+        onEndReached={loadMoreData}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={loadingMore && <ActivityIndicator size="large" color={COLORS.primary} />}
       />
     </SafeAreaView>
   );
@@ -254,61 +285,50 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   categoriesContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  label: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 10,
+    marginTop: 20,
   },
   categoriesListContainer: {
-    alignItems: 'center',
+    marginVertical: 10,
+    paddingHorizontal: 10,
   },
   categoryBtnWrapper: {
     marginRight: 15,
   },
   categoryBtn: {
-    width: 90,
-    height: 90,
-    borderRadius: 60,
     alignItems: 'center',
-    justifyContent: 'center',
     padding: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E5E5E5',
   },
   categoryBtnImgCon: {
-    width: 40,
-    height: 40,
+    height: 60,
+    width: 60,
     borderRadius: 30,
-    overflow: 'hidden',
-    alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 5,
+    alignItems: 'center',
+    backgroundColor: '#E5E5E5',
   },
   categoryImage: {
-    width: 40,
     height: 40,
-    borderRadius: 30,
+    width: 40,
+    borderRadius: 20,
   },
   categoryName: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontSize: 14,
+    marginTop: 5,
   },
   card: {
-    height: 220,
     width: cardWidth,
-    marginHorizontal: 10,
-    marginBottom: 20,
-    marginTop: 50,
-    borderRadius: 15,
-    elevation: 13,
     backgroundColor: '#FFF',
+    borderRadius: 10,
+    marginBottom: 20,
+    elevation: 2,
+    marginHorizontal: 10,
   },
   addToCartBtn: {
-    height: 30,
-    width: 30,
+    height: 40,
+    width: 40,
     borderRadius: 20,
     backgroundColor: '#4CAF50',
     justifyContent: 'center',

@@ -16,11 +16,12 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 
 export default function CreateOTPVerificationScreen({ navigation, route }) {
-  const { backendOtp } = route.params;  // Access the OTP passed from the previous screen
+  const { backendOtp, name, phone, email, address, password } = route.params;
   const [otp, setOtp] = useState('');
 
   const handleVerify = async () => {
     if (otp === backendOtp) {
+      // navigation.navigate('ConsumerDashboard', { name, phone, email, address, password });
       try {
         const response = await fetch('https://aaa3-152-52-34-131.ngrok-free.app/consumer/signup', {
           method: 'POST',
@@ -28,15 +29,20 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            // Assuming these are also available in the current component or passed as route params
-            name, phone, email, address, password, otp: backendOtp,
+            name,
+            phone,
+            email,
+            address,
+            password,
+            otp: backendOtp,
+            // If photo needs to be sent, include it
           }),
         });
 
         if (response.ok) {
           const data = await response.json();
-          console.log('User registered:', data);
-          navigation.navigate('ConsumerDashboard');
+          console.log('User registered:', data.data);
+          navigation.navigate('ConsumerDashboard', { data }); // Pass userData to ConsumerDashboard
         } else {
           console.error('Failed to sign up');
         }
@@ -47,6 +53,7 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
       Alert.alert('Invalid OTP', 'The OTP you entered is incorrect.');
     }
   };
+  
 
   const handleResendOtp = () => {
     // Handle OTP resend logic here
@@ -59,39 +66,32 @@ export default function CreateOTPVerificationScreen({ navigation, route }) {
       colors={['#e0f2f1', '#b9fbc0']} // Light green gradient
       style={styles.background}
     >
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.container}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
-            contentContainerStyle={styles.scrollViewContent}
-            keyboardShouldPersistTaps="handled"
-          >
-            <View style={styles.innerContainer}>
-              <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
-              <Text style={styles.title}>OTP Verification</Text>
-              <Text style={styles.infoText}>
-                We have sent a verification code to your email. Please enter it below to verify your account.
-              </Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter OTP"
-                value={otp}
-                onChangeText={setOtp}
-                keyboardType="numeric"
-                maxLength={6}
-              />
-              <TouchableOpacity style={styles.button} onPress={handleVerify}>
-                <Text style={styles.buttonText}>Verify</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.resendButton} onPress={handleResendOtp}>
-                <Text style={styles.resendText}>Resend Code</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+      <View style={styles.container}>
+        <Image source={require('../../../assets/images/farmlogo.jpg')} style={styles.logo} />
+
+        <Text style={styles.title}>OTP Verification</Text>
+
+        <Text style={styles.infoText}>
+          We have sent a verification code to your email. Please enter it below to verify your account.
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter OTP"
+          value={otp}
+          onChangeText={setOtp}
+          keyboardType="numeric"
+          maxLength={6}
+        />
+
+        <TouchableOpacity style={styles.button} onPress={handleVerify}>
+          <Text style={styles.buttonText}>Verify</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.resendButton} onPress={handleResendOtp}>
+          <Text style={styles.resendText}>Resend Code</Text>
+        </TouchableOpacity>
+      </View>
     </LinearGradient>
   );
 }

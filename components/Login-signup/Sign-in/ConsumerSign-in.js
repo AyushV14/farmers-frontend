@@ -52,9 +52,9 @@ export default function ConsumerLoginScreen({ navigation }) {
         if (response.ok) {
           const data = await response.json();
           console.log('User registered:', data);
-          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp, name, phone, email, address, password });
+          navigation.navigate('CreateOTPVerificationScreen', { backendOtp: data.otp ,name,phone,email,address,password});
         } else {
-          console.error('Failed to register user');
+          console.error('Failed to send OTP');
         }
       } catch (error) {
         console.error('Error:', error);
@@ -63,6 +63,7 @@ export default function ConsumerLoginScreen({ navigation }) {
       alert('Please fill all fields');
     }
   };
+  
 
   return (
     <LinearGradient
