@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { View, Text } from 'react-native';
 import ConsumerDashboard from '../ConsumerDashboard'; // Import your actual ConsumerDashboard screen
 import CartScreen from '../Cart/CartScreen'; // Import your actual CartScreen.js
+import Localmall from '../../Dashboard/localmall/Localmall'; // Import your Localmall screen
+import SearchCon from '../search/SearchCon';
 
 // Define COLORS directly with green shades
 const COLORS = {
@@ -14,13 +16,6 @@ const COLORS = {
   light: '#E5E5E5',
   grey: '#908e8c',
 };
-
-// Placeholder Components for other screens
-const PlaceholderScreen = ({ title }) => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text>{title}</Text>
-  </View>
-);
 
 const Tab = createBottomTabNavigator();
 
@@ -42,9 +37,9 @@ const BottomNavigator = () => {
           // Add logic to render icons based on route
           switch (route.name) {
             case 'Home':
-              return <Icon name="home-filled" color={color} size={size}  style={{fontSize:'30px'}}/>;
+              return <Icon name="home-filled" color={color} size={size} style={{ fontSize: '30px' }} />;
             case 'LocalMall':
-              return <Icon name="local-mall" color={color} size={size}  style={{fontSize:'30px'}}/>;
+              return <Icon name="local-mall" color={color} size={size} style={{ fontSize: '30px' }} />;
             case 'Search':
               return (
                 <View
@@ -65,9 +60,9 @@ const BottomNavigator = () => {
                 </View>
               );
             case 'Favorite':
-              return <Icon name="favorite" color={color} size={size}  style={{fontSize:'30px'}}/>;
+              return <Icon name="favorite" color={color} size={size} style={{ fontSize: '30px' }} />;
             case 'Cart':
-              return <Icon name="shopping-cart" color={color} size={size}  style={{fontSize:'30px'}}/>;
+              return <Icon name="shopping-cart" color={color} size={size} style={{ fontSize: '30px' }} />;
             default:
               return null;
           }
@@ -77,9 +72,11 @@ const BottomNavigator = () => {
       {/* Navigate to ConsumerDashboard when Home is clicked */}
       <Tab.Screen name="Home" component={ConsumerDashboard} />
 
+      {/* Actual Localmall screen */}
+      <Tab.Screen name="LocalMall" component={Localmall} />
+
       {/* Placeholder Screens */}
-      <Tab.Screen name="LocalMall" children={() => <PlaceholderScreen title="Local Mall Screen" />} />
-      <Tab.Screen name="Search" children={() => <PlaceholderScreen title="Search Screen" />} />
+      <Tab.Screen name="Search" component={SearchCon} />
       <Tab.Screen name="Favorite" children={() => <PlaceholderScreen title="Favorite Screen" />} />
 
       {/* Navigate to CartScreen.js when Cart is clicked */}
@@ -87,5 +84,12 @@ const BottomNavigator = () => {
     </Tab.Navigator>
   );
 };
+
+// Placeholder screen component
+const PlaceholderScreen = ({ title }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>{title}</Text>
+  </View>
+);
 
 export default BottomNavigator;

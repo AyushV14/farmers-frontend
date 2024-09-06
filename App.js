@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import IntroScreen from './components/Intro/IntroScreen';
@@ -20,6 +20,11 @@ import OrderReceivedScreen from './components/Dashboard/FarmOrders/OrderReceived
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  useEffect(() => {
+    console.log("app");
+
+  })
   // State to hold user data
   const [userData, setUserData] = useState(null);
 
@@ -105,6 +110,7 @@ export default function App() {
           component={BiddingScreen}
           options={{ headerShown: false }}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
