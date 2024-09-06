@@ -1,36 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, ScrollView, SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
 
-export default function FarmerDashboard() {
-  const COLORS = {
-    white: '#FFF',
-    dark: '#000',
-    primary: '#4CAF50', 
-    secondary: '#C8E6C9', 
-    light: '#E5E5E5',
-    grey: '#908e8c',
-  };
+const COLORS = {
+  white: '#FFF',
+  dark: '#000',
+  primary: '#4CAF50',
+  secondary: '#C8E6C9',
+  light: '#F5F5F5',
+  grey: '#908e8c',
+};
 
+export default function FarmerDashboard() {
   const [marketData, setMarketData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulating API fetch
-    const fetchMarketData = async () => {
-      try {
-        const response = await fetch(
-          'https://api.data.gov.in/resource/35985678-0d79-46b4-9ed6-6f13308a1d24?api-key=579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b&format=json&limit=10&filters[State.keyword]=Maharashtra'
-        );
-        const data = await response.json();
-        setMarketData(data.records); // Assuming data.records has the relevant info
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching market data', error);
-        setLoading(false);
-      }
-    };
+    // Hardcoded data for crops
+    const hardcodedData = [
+      { commodity: 'Wheat', modal_price: '2500', image: require('../../assets/food/grains.png') },
+      { commodity: 'Rice', modal_price: '3500', image: require('../../assets/food/apple.jpg') },
+      { commodity: 'Maize', modal_price: '1800', image: require('../../assets/food/apple.jpg') },
+      { commodity: 'Barley', modal_price: '1500', image: require('../../assets/food/apple.jpg') },
+      { commodity: 'Sugarcane', modal_price: '2800', image: require('../../assets/food/apple.jpg') },
+    ];
 
-    fetchMarketData();
+    // Set the hardcoded data and stop loading
+    setMarketData(hardcodedData);
+    setLoading(false);
   }, []);
 
   if (loading) {
@@ -47,10 +43,8 @@ export default function FarmerDashboard() {
         {/* Header */}
         <View style={style.header}>
           <View>
-            <View style={{ flexDirection: 'row' }}>
-              <Text style={style.greetingText}>Hello,</Text>
-              <Text style={style.greetingTextBold}>Xyz</Text>
-            </View>
+            <Text style={style.greetingText}>Hello,</Text>
+            <Text style={style.greetingTextBold}>Xyz</Text>
           </View>
           <Image
             source={require('../../assets/images/person.png')}
@@ -64,9 +58,11 @@ export default function FarmerDashboard() {
           {marketData && marketData.length > 0 ? (
             marketData.map((item, index) => (
               <View key={index} style={style.marketItem}>
-                <Text style={style.cropText}>Crop: {item.commodity}</Text>
-                <Text style={style.priceText}>Price: ₹{item.modal_price}</Text>
-                <Text style={style.marketText}>Market: {item.market}</Text>
+                <Image source={item.image} style={style.cropImage} />
+                <View style={style.marketTextContainer}>
+                  <Text style={style.cropText}>{item.commodity}</Text>
+                  <Text style={style.priceText}>₹{item.modal_price} / Quintal</Text>
+                </View>
               </View>
             ))
           ) : (
@@ -85,20 +81,20 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    marginTop: 10,
+    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
   },
   greetingText: {
-    fontSize: 28,
-    color: '#000',
+    fontSize: 24,
+    color: COLORS.dark,
   },
   greetingTextBold: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginLeft: 10,
-    color: '#000',
+    marginLeft: 5,
+    color: COLORS.dark,
   },
   profileImage: {
     height: 50,
@@ -107,29 +103,40 @@ const style = StyleSheet.create({
   },
   marketDataContainer: {
     paddingHorizontal: 20,
-    marginTop: 20,
+    marginTop: 30,
   },
   marketDataTitle: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: COLORS.primary,
   },
   marketItem: {
-    marginBottom: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#E5E5E5',
+    backgroundColor: COLORS.light,
+    elevation: 2, // For subtle shadow effect
+  },
+  cropImage: {
+    height: 60,
+    width: 60,
+    borderRadius: 10,
+    marginRight: 15,
+  },
+  marketTextContainer: {
+    flex: 1,
   },
   cropText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: COLORS.dark,
   },
   priceText: {
     fontSize: 16,
-    color: '#4CAF50',
-  },
-  marketText: {
-    fontSize: 16,
-    color: '#908e8c',
+    color: COLORS.primary,
+    marginTop: 5,
   },
 });

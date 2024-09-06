@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import FarmerDashboard from '../FarmerDashboard';
 import BiddingScreen from '../biddingsystem/BiddingScreen';
 import AddProductScreen from '../FarmerAddProduct/AddProductScreen'; // Assuming you have an Add Product screen
-import OrderReceivedScreen from '../FarmerOrders/OrderReceivedScreen'; // Assuming you have an Order Received screen
+import OrderReceivedScreen from '../FarmOrders/OrderReceivedScreen'; // Assuming you have an Order Received screen
 
 const COLORS = {
   white: '#FFF',
