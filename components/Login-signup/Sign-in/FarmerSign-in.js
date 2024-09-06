@@ -45,7 +45,7 @@ export default function FarmerSignIn() {
 
       if (response.ok) {
         // Handle successful sign-up, e.g., navigate to dashboard
-        navigation.navigate('FarmerDashboard');
+        navigation.navigate('satbara');
         console.log(data);
 
       } else {

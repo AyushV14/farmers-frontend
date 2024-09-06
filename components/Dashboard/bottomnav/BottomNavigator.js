@@ -1,172 +1,95 @@
-import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, FlatList, SafeAreaView, TextInput, Alert } from 'react-native';
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { View, Text } from 'react-native';
+import ConsumerDashboard from '../ConsumerDashboard'; // Import your actual ConsumerDashboard screen
+import CartScreen from '../Cart/CartScreen'; // Import your actual CartScreen.js
+import Localmall from '../../Dashboard/localmall/Localmall'; // Import your Localmall screen
+import SearchCon from '../search/SearchCon';
+import WalletScreen from '../wallet/WalletScreen';
+// Define COLORS directly with green shades
+const COLORS = {
+  white: '#FFF',
+  dark: '#000',
+  primary: '#4CAF50', // Changed to green shade
+  secondary: '#C8E6C9', // Changed to light green shade
+  light: '#E5E5E5',
+  grey: '#908e8c',
+};
 
-const WalletScreen = () => {
-  const [balance, setBalance] = useState(500); // Initial balance for demonstration
-  const [transactions, setTransactions] = useState([
-    { id: '1', type: 'Add', amount: 100, date: '2024-09-01' },
-    { id: '2', type: 'Send', amount: 50, date: '2024-09-02' },
-  ]);
-  const [amount, setAmount] = useState(''); // Amount to add/send
-  const [error, setError] = useState(''); // Error message
+const Tab = createBottomTabNavigator();
 
-  const handleAddMoney = () => {
-    const amountToAdd = parseFloat(amount);
-    if (isNaN(amountToAdd) || amountToAdd <= 0) {
-      setError('Please enter a valid amount to add.');
-      return;
-    }
-    setBalance(balance + amountToAdd);
-    setTransactions([
-      ...transactions,
-      { id: Math.random().toString(), type: 'Add', amount: amountToAdd, date: new Date().toLocaleDateString() },
-    ]);
-    setAmount('');
-    setError('');
-  };
-
-  const handleSendMoney = () => {
-    const amountToSend = parseFloat(amount);
-    if (isNaN(amountToSend) || amountToSend <= 0) {
-      setError('Please enter a valid amount to send.');
-      return;
-    }
-    if (balance - amountToSend < 0) {
-      Alert.alert('Insufficient Balance', 'You cannot send more money than your available balance.');
-      return;
-    }
-    setBalance(balance - amountToSend);
-    setTransactions([
-      ...transactions,
-      { id: Math.random().toString(), type: 'Send', amount: amountToSend, date: new Date().toLocaleDateString() },
-    ]);
-    setAmount('');
-    setError('');
-  };
-
-  const renderTransaction = ({ item }) => (
-    <View style={styles.transactionItem}>
-      <Text style={styles.transactionText}>
-        {item.type} ₹{item.amount} on {item.date}
-      </Text>
-    </View>
-  );
-
+const BottomNavigator = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>My Wallet</Text>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false, // Hide the header for all screens
+        tabBarActiveTintColor: COLORS.primary, // Active tint color
+        tabBarShowLabel: false, // Hide labels
+        tabBarStyle: {
+          display: 'flex', // Ensure the tab bar is visible
+          borderTopWidth: 0,
+          elevation: 0,
+          paddingBottom: 10,
+          marginBottom: 0,
+        },
+        tabBarIcon: ({ color, size }) => {
+          // Add logic to render icons based on route
+          switch (route.name) {
+            case 'Home':
+              return <Icon name="home-filled" color={color} size={size} style={{ fontSize: '30px' }} />;
+            case 'LocalMall':
+              return <Icon name="local-mall" color={color} size={size} style={{ fontSize: '30px' }} />;
+            case 'Search':
+              return (
+                <View
+                  style={{
+                    height: 60,
+                    width: 60,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: COLORS.white,
+                    borderColor: COLORS.primary,
+                    borderWidth: 2,
+                    borderRadius: 30,
+                    top: -25,
+                    elevation: 5,
+                  }}
+                >
+                  <Icon name="search" color={COLORS.primary} size={size} />
+                </View>
+              );
+            case 'Wallet':
+              return <Icon name="credit-card" color={color} size={size} style={{ fontSize: '30px' }} />;
+            case 'Cart':
+              return <Icon name="shopping-cart" color={color} size={size} style={{ fontSize: '30px' }} />;
+            default:
+              return null;
+          }
+        },
+      })}
+    >
+      {/* Navigate to ConsumerDashboard when Home is clicked */}
+      <Tab.Screen name="Home" component={ConsumerDashboard} />
 
-      <View style={styles.balanceContainer}>
-        <Text style={styles.balanceText}>Balance: ₹{balance}</Text>
-      </View>
+      {/* Actual Localmall screen */}
+      <Tab.Screen name="LocalMall" component={Localmall} />
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter amount"
-          keyboardType="numeric"
-          value={amount}
-          onChangeText={setAmount}
-        />
-      </View>
+      {/* Placeholder Screens */}
+      <Tab.Screen name="Search" component={SearchCon} />
+      <Tab.Screen name="Wallet" component={WalletScreen} />
 
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-
-      <View style={styles.buttonsContainer}>
-        <View style={styles.button}>
-          <Button title="Add Money" onPress={handleAddMoney} color="#4CAF50" />
-        </View>
-        <View style={styles.button}>
-          <Button title="Send Money" onPress={handleSendMoney} color="#FF5722" />
-        </View>
-      </View>
-
-      <Text style={styles.transactionHeader}>Transaction History</Text>
-      <FlatList
-        data={transactions}
-        renderItem={renderTransaction}
-        keyExtractor={item => item.id}
-        style={styles.transactionList}
-      />
-    </SafeAreaView>
+      {/* Navigate to CartScreen.js when Cart is clicked */}
+      <Tab.Screen name="Cart" component={CartScreen} />
+    </Tab.Navigator>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#E5E5E5',
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#4CAF50',
-  },
-  balanceContainer: {
-    backgroundColor: '#FFF',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 5,
-  },
-  balanceText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  input: {
-    height: 50,
-    borderColor: '#CCC',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    backgroundColor: '#FFF',
-  },
-  errorText: {
-    color: 'red',
-    marginBottom: 10,
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  button: {
-    flex: 1,
-    marginHorizontal: 10,
-  },
-  transactionHeader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  transactionList: {
-    marginTop: 10,
-  },
-  transactionItem: {
-    backgroundColor: '#FFF',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
-  },
-  transactionText: {
-    fontSize: 16,
-    color: '#333',
-  },
-});
+// Placeholder screen component
+const PlaceholderScreen = ({ title }) => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Text>{title}</Text>
+  </View>
+);
 
-export default WalletScreen;
+export default BottomNavigator;
