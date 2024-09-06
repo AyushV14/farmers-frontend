@@ -34,6 +34,8 @@ export default function ConsumerDashboard() {
     grey: '#908e8c',
   };
 
+
+
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [data, setData] = useState(foods.slice(0, 10));
   const [page, setPage] = useState(1);
@@ -133,8 +135,8 @@ export default function ConsumerDashboard() {
       </View>
 
       <View style={style.greetingContainer}>
-        <Text style={style.greetingText}>Hello,</Text>
-        <Text style={style.greetingTextBold}>{user?.name}!</Text>
+        <Text style={style.greetingText}>Hello</Text>
+        <Text style={style.greetingTextBold}>!</Text>
       </View>
       <View
         style={{
