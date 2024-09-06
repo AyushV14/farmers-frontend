@@ -15,7 +15,7 @@ import Satbara from './components/Login-signup/7-12/satbara'
 
 import BiddingScreen from './components/Dashboard/biddingsystem/BiddingScreen';
 import AddProductScreen from './components/Dashboard/FarmerAddProduct/AddProductScreen'; // Add Product Screen
-import OrderReceivedScreen from './components/Dashboard/FarmerOrders/OrderReceivedScreen'; // Order Received Screen
+import OrderReceivedScreen from './components/Dashboard/FarmOrders/OrderReceivedScreen'; // Order Received Screen
 
 const Stack = createStackNavigator();
 
