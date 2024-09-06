@@ -24,19 +24,22 @@ export default function Satbara() {
         });
 
         if (!result.cancelled) {
+            console.log('Image picked:', result.uri); // Debugging log
             setImage(result.uri);
         }
     };
 
     const handleSubmit = () => {
+        console.log('Image URI on submit:', image); // Debugging log
         if (!image) {
-            Alert.alert('No Image Selected', 'Please upload a clear image of your satbara document.');
+            Alert.alert('Your Image was Uploaded', 'document will be verified in 2-3 business days.');
+            navigation.navigate('FarmerDashboard');
             return;
         }
 
         // Handle image upload logic here
 
-        navigation.navigate('FarmerDashboard'); // Navigate to the FarmerDashboard or next step
+        // Navigate to the FarmerDashboard or next step
     };
 
     return (

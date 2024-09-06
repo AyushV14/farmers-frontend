@@ -41,8 +41,8 @@ export default function FarmerLoginScreen({ navigation }) {
 
       if (response.ok) {
         if (data.verificationstatus) {
-          // Navigate to FarmerDashboard if verificationstatus is true
-          navigation.navigate('FarmerDashboard');
+          // Navigate to Satbara if verificationstatus is true
+          navigation.navigate('satbara');
         } else {
           // Show alert if verificationstatus is false
           Alert.alert('Account Not Verified', 'Your account is not verified. Please check your email for verification instructions.');
